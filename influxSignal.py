@@ -7,7 +7,7 @@ except:
         "You must install the `influxdb` python package to use the `influxhistorian` device class")
     exit(1)
 
-def iquery(startTimeQuery=start_time, endTimeQuery=end_time):
+def iquery(startTimeQuery, endTimeQuery):
     """Instantiate a connection to the InfluxDB."""
     host='localhost'
     port=8086
@@ -30,7 +30,7 @@ def iquery(startTimeQuery=start_time, endTimeQuery=end_time):
 
     i = 0
     for row in data:
-        valueData[i] = float(row['value'])
+        valueData[i] = float(row['water_level'])
         timeData[i] = row['time']
         i += 1
 
@@ -39,13 +39,20 @@ def iquery(startTimeQuery=start_time, endTimeQuery=end_time):
 
     return values, times
 
-def getTree(tree_name, shot_number):
-    return MDSplus.Tree(tree_name, shot_number, 'NORMAL')
+def getTree(tree, shot_number):
+    print(tree, shot_number)
+    return MDSplus.Tree(tree, shot_number, 'NORMAL')
 
 
-def influxSignal(tree, shot_number):
-    tree = getTree(tree, shot_number)
-    treetimectx = tree.getTimeContext()
+def influxSignal(start_time, end_time):
+    # tree = getTree(tree, shot_number)
+    # treetimectx = tree.getTimeContext()
+    # print(tree)
 
-    values, times = iquery(treetimectx[0], treetimectx[1])
+    start_time = str(int(start_time))
+    end_time   = str(int(end_time))
+    print('Query Start time: %s' % start_time) 
+    print('Query End time  : %s' % end_time)
+
+    values, times = iquery(start_time, end_time)
     return MDSplus.Signal(values, None, times)
