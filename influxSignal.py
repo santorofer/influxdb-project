@@ -4,7 +4,7 @@ try:
     from influxdb import InfluxDBClient
 except:
     print(
-        "You must install the `influxdb` python package to use the `influxhistorian` device class")
+        "You must install the `influxdb` python package.")
     exit(1)
 
 def influxSignal(dbname, measurement, field_value):
@@ -18,7 +18,7 @@ def influxSignal(dbname, measurement, field_value):
     measurement = measurement.data()
     field_value = field_value.data()
 
-    MDSplus.Data.execute('TreeOpen("influx",0)')
+    MDSplus.Data.execute('TreeOpen("influx", 0)')
     start_end_times = MDSplus.Tree.getTimeContext()
     print('Getting time context from the tree: {} '.format(start_end_times))
     start_time = str(int(start_end_times[0]))
