@@ -7,7 +7,6 @@ except:
         "You must install the `influxdb` python package to use the `influxhistorian` device class")
     exit(1)
 
-#def influxSignal(start_time, end_time, dbname, measurement, field_value):
 def influxSignal(dbname, measurement, field_value):
     """Instantiate a connection to the InfluxDB."""
     host     = 'localhost'
@@ -21,12 +20,9 @@ def influxSignal(dbname, measurement, field_value):
 
     MDSplus.Data.execute('TreeOpen("influx",0)')
     start_end_times = MDSplus.Tree.getTimeContext()
-    print('Getting the time context from the tree: {} '.format(start_end_times))
+    print('Getting time context from the tree: {} '.format(start_end_times))
     start_time = str(int(start_end_times[0]))
     end_time   = str(int(start_end_times[1]))
-
-    print('Query Start time: %s' % start_time)
-    print('Query End time  : %s' % end_time)
     
     client = InfluxDBClient(host, port, user, password, dbname)
     # example influxDB query:
@@ -35,7 +31,7 @@ def influxSignal(dbname, measurement, field_value):
     # field_value = water_level
     # 'SELECT "water_level" FROM "h2o_feet" WHERE time >= 1568745000000000000 AND time <= 1568750760000000000;'
     query = 'SELECT "%s" FROM "%s" WHERE time >= %s AND time <= %s;' % (field_value, measurement, start_time, end_time)
-    print(query)
+    print('Query: %s' % query)
 
     result = client.query(query, params={'epoch': 'ms'})
 
